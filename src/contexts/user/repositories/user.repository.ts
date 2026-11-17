@@ -1,5 +1,6 @@
 import { db } from "../../../config/data-source";
 import { UserEntity } from "../entities/User.entity";
+import { DeleteResult } from "typeorm";
 
 export const getAll = async (): Promise<UserEntity[]> => {
     const users: UserEntity[] | [] = await db.getRepository(UserEntity).find({
@@ -33,3 +34,9 @@ export const findById = (id: number): Promise<UserEntity | null> => {
 
     return user
 }
+
+export const deleteUser = (id: number): Promise<DeleteResult> => {
+
+    return db.getRepository(UserEntity).delete({ id });
+
+};

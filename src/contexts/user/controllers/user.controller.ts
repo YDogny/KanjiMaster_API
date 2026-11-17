@@ -24,3 +24,13 @@ export const getUserById = async (req: any, res: any) => {
         res.status(200).send(user);
     }
 }
+
+export const deleteUser = async (req: any, res: any) => {
+    const userId = parseInt(req.params.id, 10);
+    const response = await userService.deleteUserById(userId);
+    if (response !== "Ok") {
+        res.status(404).send({ message: "This user does not exist" });
+    } else {
+        res.status(200).send({ message: "Success, user deleted" });
+    }
+}

@@ -1,4 +1,5 @@
 import * as userRepository  from "../repositories/user.repository";
+import { DeleteResult } from "typeorm";
 
 export const getAllUsers = () => {
   try {
@@ -23,6 +24,23 @@ export const getUserById = (id: number) => {
       throw new Error("Error fetching user: " + error.message);
   }
 }
+
+export const deleteUserById = async (id: number) => {
+
+    try {
+        const result = await userRepository.deleteUser(id);
+
+        if (result.affected === 0) {
+            throw new Error("User not found");
+        }
+
+        return "Ok";
+
+    } catch (error: any) {
+        throw new Error("Error deleting user: " + error.message);
+    }
+};
+
 /*
 export const CreateUser = (userToCreate: any) =>{
   try {

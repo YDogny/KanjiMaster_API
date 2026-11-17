@@ -5,6 +5,8 @@ const router = Router()
 
 router.get('/', userController.getUsers)
 router.get('/:id', userController.getUserById)
-//router.get('/supprimer/:id', userController.deleteUser)
+//router.post('/ajouter', userController.createUser)
+//router.put('/modifier/:id', userController.updateUser)
+//router.delete('/supprimer/:id', userController.deleteUser)
 
 export default router
