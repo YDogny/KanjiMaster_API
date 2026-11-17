@@ -4,12 +4,17 @@ import express from 'express'
 import cors from 'cors'
 
 import { db } from "./config/data-source";
+import userRouter from "./contexts/user/routes/user.route"
+//import authRouter from "./contexts/auth/routes/auth.route"
 
 const app = express()
 const PORT = 4001
 
 app.use(cors())
 app.use(express.json())
+
+app.use("/user", userRouter);
+//app.use("/auth", authRouter);
 
 app.get("/api/health", (_req, res) => {
   res.status(200).json({
