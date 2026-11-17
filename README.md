@@ -2,14 +2,29 @@
 
 API REST dédiée à l'apprentissage du japonais.
 
+KanjiMaster a pour objectif de proposer une API permettant de gérer des utilisateurs et des caractères japonais (hiragana, katakana et kanji).
+
 ## Technologies utilisées
 
-- Node.js
-- TypeScript
-- Express.js
-- TypeORM
-- MySQL
-- JWT (authentification prévue)
+- **Node.js** : environnement d'exécution JavaScript.
+- **TypeScript** : typage statique.
+- **Express** : création du serveur et des routes HTTP.
+- **TypeORM** : gestion de la base de données et des entités.
+- **MySQL** : système de gestion de base de données.
+- **mysql2** : pilote de connexion MySQL.
+- **dotenv** : gestion des variables d'environnement.
+
+## Fonctionnalités réalisées
+
+- [x] Initialisation du projet Node.js.
+- [x] Configuration de TypeScript.
+- [x] Mise en place du serveur Express.
+- [x] Création de la route GET `/api/health`.
+- [x] Configuration de TypeORM.
+- [x] Connexion à une base de données MySQL.
+- [x] Configuration de l'encodage UTF-8 (`utf8mb4`).
+- [x] Création de l'entité `UserEntity`.
+- [x] Création de la table `users` dans MySQL.
 
 ## Prérequis
 
@@ -39,7 +54,23 @@ Installer les dépendances :
 npm install
 ```
 
-Cette commande installe automatiquement les dépendances déclarées dans `package.json`.
+## Configuration de la base de données
+
+Créer une base de données MySQL nommée `kanjimaster`.
+
+Créer ensuite un fichier `.env` à la racine du projet en prenant exemple sur `.env.example` :
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=your_password
+DB_DATABASE=kanjimaster
+```
+
+Remplacer `your_password` par le mot de passe de son compte MySQL.
+
+**Important :** le fichier `.env` contient des informations sensibles et ne doit jamais être envoyé sur GitHub.
 
 ## Lancement du serveur
 
@@ -47,6 +78,18 @@ En développement :
 
 ```bash
 npm run dev
+```
+
+Compiler le projet TypeScript :
+
+```bash
+npm run build
+```
+
+Démarrer la version compilée :
+
+```bash
+npm start
 ```
 
 Le serveur démarre sur :
@@ -61,12 +104,13 @@ Une route de vérification est disponible :
 GET /api/health
 ```
 
-Elle permet de vérifier que le serveur fonctionne.
+Elle permet de vérifier que le serveur Express fonctionne.
 
 ## Commandes disponibles
 
 | Commande | Description |
 |---|---|
+| `npm install` | Installe les dépendances |
 | `npm run dev` | Démarre le serveur en développement |
 | `npm run build` | Compile le code TypeScript |
 | `npm start` | Démarre la version compilée |
@@ -77,8 +121,11 @@ Elle permet de vérifier que le serveur fonctionne.
 KanjiMaster_API/
 ├── src/
 │   ├── config/
-│   ├── characters/
-│   ├── models/
+│   │   ├── data-source.ts
+│   │   └── test-source.ts
+│   ├── entities/
+│   │   ├── User.entity.ts
+│   │   └── Character.entity.ts
 │   └── server.ts
 ├── .env.example
 ├── .gitignore
@@ -88,8 +135,20 @@ KanjiMaster_API/
 └── README.md
 ```
 
-## État du projet
+## État du développement
 
-Projet en cours de développement.
+Le projet est actuellement en cours de développement.
 
-Les fonctionnalités et la connexion à la base de données seront ajoutées progressivement.
+Les bases du serveur Express, de TypeScript et de la connexion MySQL avec TypeORM sont mises en place.
+
+La prochaine étape consiste à développer les fonctionnalités de gestion des utilisateurs (CRUD), puis l'authentification JWT et la gestion des caractères japonais.
+
+## Évolutions prévues
+
+- [ ] Développement du CRUD utilisateur.
+- [ ] Hachage sécurisé des mots de passe.
+- [ ] Mise en place de l'authentification JWT.
+- [ ] Gestion des caractères japonais.
+- [ ] Développement des routes CRUD pour les caractères.
+- [ ] Validation des données.
+- [ ] Mise en place de tests automatisés.

@@ -3,6 +3,8 @@ import 'reflect-metadata'
 import express from 'express'
 import cors from 'cors'
 
+import { db } from "./config/data-source";
+
 const app = express()
 const PORT = 4001
 
@@ -16,6 +18,19 @@ app.get("/api/health", (_req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`)
-})
+async function startServer() {
+  try {
+    await db.initialize();
+
+    console.log("Connexion à la base de données réussie !");
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+
+  } catch (error) {
+    console.error("Error connecting to the database:", error);
+  }
+}
+
+startServer();
