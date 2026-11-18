@@ -52,3 +52,39 @@ export const CreateUser = async (userToCreate: any): Promise<UserEntity> => {
 
   return createUser
 }
+
+export const UpdateUser = async (
+    id: number,
+    userToUpdate: {
+        username?: string;
+        email?: string;
+        password?: string;
+    }
+): Promise<UserEntity> => {
+
+  const existingUser = await userRepository.findById(id);
+
+  if (!existingUser) {
+      throw new UserError.UserNotFound();
+  }
+
+  if (userToUpdate.email && userToUpdate.email !== existingUser.email) {
+    const emailUser = await userRepository.findByEmail(userToUpdate.email);
+
+    if (emailUser && emailUser.id !== id) {
+        throw new UserError.UserAlreadyExists();
+    }
+  }
+
+  if (userToUpdate.password) {
+      userToUpdate.password = await bcrypt.hash(userToUpdate.password, 10);
+  }
+
+  const updatedUser = await userRepository.updateUser(id, userToUpdate);
+
+  if (!updatedUser) {
+      throw new UserError.UserNotFound();
+  }
+
+  return updatedUser;
+};

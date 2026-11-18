@@ -58,3 +58,27 @@ export const CreateUser = async (user: {username: string;email: string;password:
 
     return savedUser;
 };
+
+export const updateUser = async (
+    id: number,
+    user: Partial<Pick<UserEntity, "username" | "email" | "password">>
+): Promise<UserEntity | null> => {
+
+    const result = await db.getRepository(UserEntity).update({ id }, user);
+
+    if (result.affected === 0) {
+        return null;
+    }
+
+    const updatedUser = await db.getRepository(UserEntity).findOne({
+        where: { id },
+        select: {
+            id: true,
+            username: true,
+            email: true,
+            createdAt: true,
+        },
+    });
+
+    return updatedUser;
+};
