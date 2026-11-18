@@ -1,154 +1,186 @@
 # KanjiMaster API
 
-API REST dédiée à l'apprentissage du japonais.
+API REST permettant de gérer les utilisateurs et les fonctionnalités d'une application d'apprentissage du japonais.
 
-KanjiMaster a pour objectif de proposer une API permettant de gérer des utilisateurs et des caractères japonais (hiragana, katakana et kanji).
+## Présentation
+
+KanjiMaster API est un projet développé avec **Node.js, Express et TypeScript**. Il a pour objectif de fournir un backend permettant de gérer les utilisateurs et, à terme, les contenus liés à l'apprentissage du japonais.
+
+Le projet est organisé autour d'une architecture modulaire afin de séparer les responsabilités et de faciliter son évolution.
 
 ## Technologies utilisées
 
-- **Node.js** : environnement d'exécution JavaScript.
-- **TypeScript** : typage statique.
-- **Express** : création du serveur et des routes HTTP.
-- **TypeORM** : gestion de la base de données et des entités.
-- **MySQL** : système de gestion de base de données.
-- **mysql2** : pilote de connexion MySQL.
-- **dotenv** : gestion des variables d'environnement.
-
-## Fonctionnalités réalisées
-
-- [x] Initialisation du projet Node.js.
-- [x] Configuration de TypeScript.
-- [x] Mise en place du serveur Express.
-- [x] Création de la route GET `/api/health`.
-- [x] Configuration de TypeORM.
-- [x] Connexion à une base de données MySQL.
-- [x] Configuration de l'encodage UTF-8 (`utf8mb4`).
-- [x] Création de l'entité `UserEntity`.
-- [x] Création de la table `users` dans MySQL.
+| Technologie | Utilisation |
+|---|---|
+| Node.js | Environnement d'exécution |
+| Express 5 | Création de l'API REST |
+| TypeScript | Typage et structuration du code |
+| MySQL | Base de données relationnelle |
+| TypeORM | Communication avec la base de données |
+| Zod | Validation des données entrantes |
+| bcrypt | Hachage des mots de passe |
+| JSON Web Token (JWT) | Authentification par jeton |
+| dotenv | Gestion des variables d'environnement |
 
 ## Prérequis
 
-Avant de commencer, installer :
+Avant de lancer le projet, il faut disposer de :
 
-- [Node.js](https://nodejs.org/)
-- [MySQL](https://dev.mysql.com/downloads/installer/)
-- [Git](https://git-scm.com/)
+- Node.js
+- npm
+- MySQL
+- Git
 
-## Installation du projet
+## Installation
 
-Cloner le dépôt :
+### 1. Cloner le dépôt
 
 ```bash
 git clone https://github.com/YDogny/KanjiMaster_API.git
 ```
 
-Accéder au dossier :
+### 2. Accéder au projet
 
 ```bash
 cd KanjiMaster_API
 ```
 
-Installer les dépendances :
+### 3. Installer les dépendances
 
 ```bash
 npm install
 ```
 
-## Configuration de la base de données
+### 4. Configurer les variables d'environnement
 
-Créer une base de données MySQL nommée `kanjimaster`.
-
-Créer ensuite un fichier `.env` à la racine du projet en prenant exemple sur `.env.example` :
+Créer un fichier `.env` à la racine du projet :
 
 ```env
+PORT=4001
+
 DB_HOST=localhost
 DB_PORT=3306
 DB_USERNAME=root
 DB_PASSWORD=your_password
 DB_DATABASE=kanjimaster
+
+JWT_SECRET=your_secret
 ```
 
-Remplacer `your_password` par le mot de passe de son compte MySQL.
+Remplacer les valeurs par celles de votre environnement.
 
-**Important :** le fichier `.env` contient des informations sensibles et ne doit jamais être envoyé sur GitHub.
+**Important :** le fichier `.env` contient des informations sensibles et ne doit pas être envoyé sur GitHub.
 
-## Lancement du serveur
+### 5. Préparer la base de données
 
-En développement :
+Créer une base de données MySQL nommée `kanjimaster`.
+
+La connexion à la base de données est configurée avec TypeORM.
+
+## Lancement du projet
+
+### Mode développement
 
 ```bash
 npm run dev
 ```
 
-Compiler le projet TypeScript :
+Le serveur est lancé avec `tsx watch`, ce qui permet de redémarrer automatiquement l'application lors des modifications.
+
+### Compilation TypeScript
 
 ```bash
 npm run build
 ```
 
-Démarrer la version compilée :
+Les fichiers compilés sont générés dans le dossier `dist`.
+
+### Mode production
 
 ```bash
 npm start
 ```
 
-Le serveur démarre sur :
+Cette commande démarre l'application compilée à partir de `dist/server.js`.
 
-http://localhost:4001
-
-## Vérification de l'API
-
-Une route de vérification est disponible :
-
-```http
-GET /api/health
-```
-
-Elle permet de vérifier que le serveur Express fonctionne.
-
-## Commandes disponibles
-
-| Commande | Description |
-|---|---|
-| `npm install` | Installe les dépendances |
-| `npm run dev` | Démarre le serveur en développement |
-| `npm run build` | Compile le code TypeScript |
-| `npm start` | Démarre la version compilée |
-
-## Structure du projet
+## Organisation du projet
 
 ```text
-KanjiMaster_API/
-├── src/
-│   ├── config/
-│   │   ├── data-source.ts
-│   │   └── test-source.ts
-│   ├── entities/
-│   │   ├── User.entity.ts
-│   │   └── Character.entity.ts
-│   └── server.ts
-├── .env.example
-├── .gitignore
-├── package.json
-├── package-lock.json
-├── tsconfig.json
-└── README.md
+src/
+├── contexts/
+│   └── user/
+│       ├── controllers/
+│       ├── entities/
+│       ├── errors/
+│       ├── repositories/
+│       ├── routes/
+│       ├── services/
+│       └── types/
+│           └── zod/
+│
+├── core/
+│   ├── data-source.ts
+│   ├── http/
+│   └── middleware/
+│
+└── server.ts
+
+dist/
+.env
+.gitignore
+package.json
+tsconfig.json
+README.md
 ```
 
-## État du développement
+### Organisation par responsabilités
+
+- **Controllers** : réceptionnent les requêtes HTTP et construisent les réponses.
+- **Entities** : représentent les tables de la base de données avec TypeORM.
+- **Repositories** : centralisent les opérations d'accès aux données.
+- **Services** : contiennent la logique métier.
+- **Routes** : définissent les endpoints de l'API.
+- **Errors** : regroupent la gestion des erreurs.
+- **Zod** : définit les schémas de validation des données entrantes.
+- **Core** : regroupe les éléments communs à l'application, notamment la connexion à la base de données.
+
+## Routes de l'API
+
+Les routes sont organisées par contexte fonctionnel.
+
+Les endpoints ne possèdent pas de préfixe `/api`.
+
+Exemples de préfixes :
+
+- `/user`
+- `/auth`
+- `/char`
+
+La liste détaillée des endpoints et de leurs méthodes HTTP sera complétée au fur et à mesure de leur implémentation.
+
+## Sécurité
+
+Le projet prévoit plusieurs mécanismes de sécurité :
+
+- Hachage des mots de passe avec bcrypt.
+- Authentification basée sur JWT.
+- Validation des données reçues avec Zod.
+- Utilisation de variables d'environnement pour les informations sensibles.
+
+## État du projet
 
 Le projet est actuellement en cours de développement.
 
-Les bases du serveur Express, de TypeScript et de la connexion MySQL avec TypeORM sont mises en place.
+Les prochaines étapes comprennent notamment :
 
-La prochaine étape consiste à développer les fonctionnalités de gestion des utilisateurs (CRUD), puis l'authentification JWT et la gestion des caractères japonais.
+- Finalisation du CRUD des utilisateurs.
+- Mise en place de l'authentification.
+- Développement de la gestion des caractères japonais.
+- Ajout des validations et de la gestion des erreurs.
+- Tests des différents endpoints.
 
-## Évolutions prévues
+## Auteur
 
-- [ ] Développement du CRUD utilisateur.
-- [ ] Hachage sécurisé des mots de passe.
-- [ ] Mise en place de l'authentification JWT.
-- [ ] Gestion des caractères japonais.
-- [ ] Développement des routes CRUD pour les caractères.
-- [ ] Validation des données.
-- [ ] Mise en place de tests automatisés.
+**Yann Dogny**
+
+GitHub : https://github.com/YDogny
