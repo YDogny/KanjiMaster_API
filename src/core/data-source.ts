@@ -3,7 +3,7 @@ import "reflect-metadata";
 import "dotenv/config";
 
 import { DataSource } from "typeorm";
-import { UserEntity } from "../contexts/user/entities/User.entity";
+import { UserEntity } from "../contexts/user/entities/User.entity.js";
 
 export const db = new DataSource({
   type: "mysql",

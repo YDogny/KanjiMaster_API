@@ -1,61 +1,54 @@
-import * as userRepository  from "../repositories/user.repository";
-import { DeleteResult } from "typeorm";
+import { MongoUnexpectedServerResponseError } from "typeorm/driver/mongodb/typings.js";
+import { UserEntity } from "../entities/User.entity.js";
+import * as userRepository  from "../repositories/user.repository.js";
+import * as UserError from "../errors/user.error.js"
+import bcrypt from "bcrypt";
 
 export const getAllUsers = () => {
-  try {
-      const existingUsers = userRepository.getAll()
-      if (!existingUsers) {
-          throw new Error("No users found");
-      }
-      return existingUsers
-  } catch (error: any) {
-      throw new Error("Error fetching users: " + error.message);
+
+  const existingUsers = userRepository.getAll()
+
+  if (!existingUsers) {
+    throw new UserError.UserNotFound();
   }
+
+  return existingUsers
 }
 
 export const getUserById = (id: number) => {
-  try {
-      const existingUser = userRepository.findById(id)
-      if (!existingUser) {
-          throw new Error("User not found");
-      }
-      return existingUser
-  } catch (error: any) {
-      throw new Error("Error fetching user: " + error.message);
+
+  const existingUser = userRepository.findById(id)
+
+  if (!existingUser) {
+    throw new UserError.UserNotFound();
   }
+
+  return existingUser
 }
 
 export const deleteUserById = async (id: number) => {
 
-    try {
-        const result = await userRepository.deleteUser(id);
+  const result = await userRepository.deleteUser(id);
 
-        if (result.affected === 0) {
-            throw new Error("User not found");
-        }
+  if (result.affected === 0) {
+    throw new UserError.UserDontExists();
+  }
 
-        return "Ok";
-
-    } catch (error: any) {
-        throw new Error("Error deleting user: " + error.message);
-    }
+  return "Ok";
 };
 
-/*
-export const CreateUser = (userToCreate: any) =>{
-  try {
-    const existingUser = userRepository.getUserByEmail(userToCreate.email)
-    if (existingUser) {
-      throw new Error("User with this email already exists");
-    }
+export const CreateUser = async (userToCreate: any): Promise<UserEntity> => {
 
-    const hachedPassword = jwtService.hashPassword(userToCreate.password)
-    userToCreate.password = hachedPassword
+  const existingUser = await userRepository.findByEmail(userToCreate.email)
 
-    const createUser = userRepository.CreateUser(userToCreate)
-
-    return createUser
-  } catch (error) {
-    throw new Error("Error creating user: " + error.message);
+  if (existingUser) {
+    throw new UserError.UserAlreadyExists();
   }
-}*/
+
+  const hachedPassword = await bcrypt.hash(userToCreate.password, 10)
+  userToCreate.password = hachedPassword
+
+  const createUser = userRepository.CreateUser(userToCreate)
+
+  return createUser
+}
