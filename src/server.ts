@@ -6,6 +6,7 @@ import cors from 'cors'
 import { db } from "./core/data-source.js";
 import userRouter from "./contexts/user/routes/user.route.js"
 import { errorMiddleware } from './core/middleware/error.middleware.js';
+import { registerSendValidationEmailListener } from './core/bus/listener/send-validation-event.listener.js';
 //import authRouter from "./contexts/auth/routes/auth.route"
 
 const app = express()
@@ -21,7 +22,7 @@ app.use(errorMiddleware);
 
 try {
   await db.initialize();
-
+  registerSendValidationEmailListener();
   console.log("Connexion à la base de données réussie !");
 
   app.listen(PORT, () => {

@@ -3,10 +3,12 @@ import { UserEntity } from "../entities/User.entity.js";
 import * as userRepository  from "../repositories/user.repository.js";
 import * as UserError from "../errors/user.error.js"
 import bcrypt from "bcrypt";
+import { eventEmitter } from "../../../core/bus/event.emitter.js";
+import { EVENTS } from "../../../core/bus/event.name.js";
 
-export const getAllUsers = () => {
+export const getAllUsers = async () => {
 
-  const existingUsers = userRepository.getAll()
+  const existingUsers = await userRepository.getAll()
 
   if (!existingUsers) {
     throw new UserError.UserNotFound();
@@ -15,14 +17,14 @@ export const getAllUsers = () => {
   return existingUsers
 }
 
-export const getUserById = (id: number) => {
+export const getUserById = async (id: number) => {
 
-  const existingUser = userRepository.findById(id)
+  const existingUser = await userRepository.findById(id)
 
   if (!existingUser) {
     throw new UserError.UserNotFound();
   }
-
+  
   return existingUser
 }
 
@@ -48,8 +50,10 @@ export const CreateUser = async (userToCreate: any): Promise<UserEntity> => {
   const hachedPassword = await bcrypt.hash(userToCreate.password, 10)
   userToCreate.password = hachedPassword
 
-  const createUser = userRepository.CreateUser(userToCreate)
-
+  const createUser = await userRepository.CreateUser(userToCreate)
+  eventEmitter.emit(EVENTS.USER_CREATED, createUser.email);
+  createUser.password = "Tu ne le saura pas"
+  createUser.id = 0
   return createUser
 }
 
