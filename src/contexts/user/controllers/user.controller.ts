@@ -1,4 +1,4 @@
-import { SuccessResponse } from "../../../core/http/success.response.js";
+importw { SuccessResponse } from "../../../core/http/success.response.js";
 import * as userService from "../services/user.service.js";
 import { createUserSchema, updateUserSchema } from "../types/zod/user.zod.js";
 

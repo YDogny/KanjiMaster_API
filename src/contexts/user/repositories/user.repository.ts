@@ -1,4 +1,4 @@
-import { db } from "../../../core/data-source.js";
+import { db } from "../../../core/config/data-source.js";
 import { UserEntity } from "../entities/User.entity.js";
 import { DeleteResult } from "typeorm";
 

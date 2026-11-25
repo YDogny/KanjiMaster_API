@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from "express";
-import { ErrorResponse } from "../http/error.response.js";
+import { ErrorResponse } from "./error.response.js";
 import { ZodError } from "zod";
 
 export const errorMiddleware: ErrorRequestHandler = (err, req, res, next) => {

@@ -3,9 +3,9 @@ import 'reflect-metadata'
 import express from 'express'
 import cors from 'cors'
 
-import { db } from "./core/data-source.js";
+import { db } from "./core/config/data-source.js";
 import userRouter from "./contexts/user/routes/user.route.js"
-import { errorMiddleware } from './core/middleware/error.middleware.js';
+import { errorMiddleware } from './core/http/api.middleware.js';
 import { envoiMailListener } from './core/bus/listener/send-validation-event.listener.js';
 //import authRouter from "./contexts/auth/routes/auth.route"
 

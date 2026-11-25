@@ -3,7 +3,7 @@ import "dotenv/config";
 
 import bcrypt from "bcrypt";
 import { db } from "./data-source.js";
-import { UserEntity } from "../contexts/user/entities/User.entity.js";
+import { UserEntity } from "../../contexts/user/entities/User.entity.js";
 
 // Les 3 utilisateurs fictifs à créer
 const testUsers = [
