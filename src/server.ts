@@ -7,7 +7,7 @@ import { db } from "./core/config/data-source.js";
 import userRoutes from "./contexts/user/presentation/routes/user.route.js";
 import { errorMiddleware } from './core/http/api.middleware.js';
 import { envoiMailListener } from './core/bus/listener/send-validation-event.listener.js';
-//import authRouter from "./contexts/auth/routes/auth.route"
+import authRoutes from "./contexts/auth/presentation/routes/auth.route.js"
 
 const app = express()
 const PORT = 4001
@@ -16,7 +16,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use("/user", userRoutes);
-//app.use("/auth", authRouter);
+app.use("/auth", authRoutes);
 
 app.use(errorMiddleware);
 

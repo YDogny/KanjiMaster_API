@@ -6,6 +6,7 @@ export const errorMiddleware: ErrorRequestHandler = (err, req, res, next) => {
     //erreur personalisé les notres
     if (err instanceof ErrorResponse) {
         res.status(err.code).json(err.toJSON());
+        return;
     }
     
     //erreur zod ou classe validator si pas bon renvoi erreur
@@ -17,6 +18,7 @@ export const errorMiddleware: ErrorRequestHandler = (err, req, res, next) => {
             }))
         });
         res.status(error.code).json(error.toJSON());
+        return;
     }
 
     //erreur classe inconnue au cas ou
