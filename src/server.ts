@@ -1,23 +1,29 @@
-import 'reflect-metadata'
+import "reflect-metadata";
 
-import express from 'express'
-import cors from 'cors'
+import express from "express";
+import cors from "cors";
 
 import { db } from "./core/config/data-source.js";
+
 import userRoutes from "./contexts/user/presentation/routes/user.route.js";
-import { apiMiddleware } from './core/http/api.middleware.js';
-import { envoiMailListener } from './core/bus/listener/send-validation-event.listener.js';
-import authRoutes from "./contexts/auth/presentation/routes/auth.route.js"
+import authRoutes from "./contexts/auth/presentation/routes/auth.route.js";
+import characterRoutes from "./contexts/character/presentation/routes/character.route.js";
 
-const app = express()
-const PORT = 4001
+import { apiMiddleware } from "./core/http/api.middleware.js";
+import { envoiMailListener } from "./core/bus/listener/send-validation-event.listener.js";
 
-app.use(cors())
-app.use(express.json())
+const app = express();
+const PORT = 4001;
 
+app.use(cors());
+app.use(express.json());
+
+// Routes
 app.use("/user", userRoutes);
 app.use("/auth", authRoutes);
+app.use("/char", characterRoutes);
 
+// Gestion des erreurs
 app.use(apiMiddleware);
 
 try {

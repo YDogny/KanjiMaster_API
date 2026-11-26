@@ -4,6 +4,7 @@ import { ErrorResponse } from "./error.response.js";
 import jwt from "jsonwebtoken";
 import { ZodError } from "zod";
 import { AuthError } from "../../contexts/auth/domain/errors/auth.error.js";
+import { CharacterError } from "../../contexts/character/domain/errors/character.error.js";
 
 export const apiMiddleware: ErrorRequestHandler = (err, req, res, next) => {
 
@@ -15,6 +16,18 @@ export const apiMiddleware: ErrorRequestHandler = (err, req, res, next) => {
 
     // Erreurs métier liées à l'authentification
     if (err instanceof AuthError) {
+        const error = new ErrorResponse(
+            err.statusCode,
+            err.message,
+            err.errId
+        );
+
+        res.status(error.code).json(error.toJSON());
+        return;
+    }
+
+    // Erreurs métier liées aux caractères
+    if (err instanceof CharacterError) {
         const error = new ErrorResponse(
             err.statusCode,
             err.message,
@@ -69,4 +82,13 @@ export const apiMiddleware: ErrorRequestHandler = (err, req, res, next) => {
         res.status(error.code).json(error.toJSON());
         return;
     }
+
+        // Erreurs inconnues
+    const error = new ErrorResponse(
+        500,
+        "Une erreur interne est survenue.",
+        "er-server-500"
+    );
+
+    res.status(error.code).json(error.toJSON());
 }

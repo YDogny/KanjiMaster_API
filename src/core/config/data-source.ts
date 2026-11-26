@@ -4,6 +4,7 @@ import "dotenv/config";
 
 import { DataSource } from "typeorm";
 import { UserEntity } from "../../contexts/user/infra/persistence/typeorm/User.entity.js";
+import { CharacterEntity } from "../../contexts/character/infra/persistence/typeorm/Character.entity.js";
 import { RefreshTokenEntity } from "../../contexts/auth/infra/persistence/typeorm/RefreshToken.entity.js";
 
 export const db = new DataSource({
@@ -21,5 +22,5 @@ export const db = new DataSource({
 
   synchronize: false,
 
-  entities: [UserEntity, RefreshTokenEntity],
+  entities: [UserEntity, RefreshTokenEntity, CharacterEntity],
 });
