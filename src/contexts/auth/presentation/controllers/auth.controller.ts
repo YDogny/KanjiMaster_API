@@ -9,6 +9,7 @@ import {
 } from "../../app/inputs/auth.input.js";
 
 import { SuccessResponse } from "../../../../core/http/success.response.js";
+import { refreshTokenSchema, logoutSchema } from "../../app/inputs/auth.input.js";
 
 export class AuthController {
 
@@ -45,6 +46,28 @@ export class AuthController {
                 new SuccessResponse(result)
             );
 
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async refresh(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const input = refreshTokenSchema.parse(req.body);
+            const result = await authHandler.refresh(input.refreshToken);
+            res.status(200).json(new SuccessResponse(result));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const input = logoutSchema.parse(req.body);
+            await authHandler.logout(input.refreshToken);
+            res.status(200).json(new SuccessResponse({
+                message: "Déconnexion réussie."
+            }));
         } catch (error) {
             next(error);
         }

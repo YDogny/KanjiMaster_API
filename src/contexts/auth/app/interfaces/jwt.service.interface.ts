@@ -5,6 +5,8 @@ export interface IJwtService {
 
     generateRefreshToken(userId: number): string;
 
+    getRefreshTokenExpiration(token: string): Date;
+
     verifyAccessToken(token: string): {
         userId: number;
         type: "access";

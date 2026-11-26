@@ -5,7 +5,7 @@ import cors from 'cors'
 
 import { db } from "./core/config/data-source.js";
 import userRoutes from "./contexts/user/presentation/routes/user.route.js";
-import { errorMiddleware } from './core/http/api.middleware.js';
+import { apiMiddleware } from './core/http/api.middleware.js';
 import { envoiMailListener } from './core/bus/listener/send-validation-event.listener.js';
 import authRoutes from "./contexts/auth/presentation/routes/auth.route.js"
 
@@ -18,7 +18,7 @@ app.use(express.json())
 app.use("/user", userRoutes);
 app.use("/auth", authRoutes);
 
-app.use(errorMiddleware);
+app.use(apiMiddleware);
 
 try {
   await db.initialize();

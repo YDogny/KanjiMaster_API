@@ -5,7 +5,11 @@ import {
     Column,
     CreateDateColumn,
     Index,
+    ManyToOne,
+    JoinColumn,
 } from "typeorm";
+
+import { UserEntity } from "../../../../user/infra/persistence/typeorm/User.entity.js";
 
 @Entity("refresh_tokens")
 export class RefreshTokenEntity {
@@ -15,6 +19,10 @@ export class RefreshTokenEntity {
 
     @Column({ type: "int" })
     userId!: number;
+
+    @ManyToOne(() => UserEntity, { onDelete: "CASCADE" })
+    @JoinColumn({ name: "userId" })
+    user!: UserEntity;
 
     @Index({ unique: true })
     @Column({ type: "varchar", length: 255 })
@@ -28,5 +36,4 @@ export class RefreshTokenEntity {
 
     @CreateDateColumn({ type: "datetime" })
     createdAt!: Date;
-
 }

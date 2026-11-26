@@ -16,4 +16,11 @@ export class AuthHandler {
         return await this.authService.login(input);
     }
 
+    async refresh(refreshToken: string) {
+        return await this.authService.refresh(refreshToken);
+    }
+
+    async logout(refreshToken: string) {
+        return await this.authService.logout(refreshToken);
+    }
 }

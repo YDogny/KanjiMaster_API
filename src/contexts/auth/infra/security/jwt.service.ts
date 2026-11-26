@@ -104,4 +104,18 @@ export class JwtService {
             type: "access" | "refresh";
         };
     }
+
+    getRefreshTokenExpiration(token: string): Date {
+        const decoded = jwt.decode(token);
+
+        if (
+            typeof decoded === "string" ||
+            decoded === null ||
+            typeof decoded.exp !== "number"
+        ) {
+            throw new Error("Impossible de déterminer l'expiration du Refresh Token.");
+        }
+
+        return new Date(decoded.exp * 1000);
+    }
 }

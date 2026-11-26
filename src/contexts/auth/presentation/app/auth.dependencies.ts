@@ -1,29 +1,39 @@
 
 import { TypeOrmAuthRepository } from "../../infra/persistence/typeorm/auth.repository.js";
+import { TypeOrmRefreshTokenRepository } from "../../infra/persistence/typeorm/refresh-token.repository.js";
+
 import { JwtService } from "../../infra/security/jwt.service.js";
+import { RefreshTokenHasher } from "../../infra/security/refresh-token-hasher.js";
 
 import { RegisterUseCase } from "../../app/usecase/register.usecase.js";
 import { LoginUseCase } from "../../app/usecase/login.usecase.js";
+import { RefreshTokenUseCase } from "../../app/usecase/refresh-token.usecase.js";
 
 import { AuthService } from "../../app/services/auth.service.js";
 import { AuthHandler } from "../../app/handlers/auth.handler.js";
 
-// Repository
 const authRepository = new TypeOrmAuthRepository();
+const refreshTokenRepository = new TypeOrmRefreshTokenRepository();
 
-// JWT
 const jwtService = new JwtService();
+const refreshTokenHasher = new RefreshTokenHasher();
 
-// Use Cases
 const registerUseCase = new RegisterUseCase(authRepository);
 const loginUseCase = new LoginUseCase(authRepository);
 
-// Service
+const refreshTokenUseCase = new RefreshTokenUseCase(
+    jwtService,
+    refreshTokenRepository,
+    refreshTokenHasher
+);
+
 const authService = new AuthService(
     registerUseCase,
     loginUseCase,
-    jwtService
+    refreshTokenUseCase,
+    jwtService,
+    refreshTokenRepository,
+    refreshTokenHasher
 );
 
-// Handler
 export const authHandler = new AuthHandler(authService);

@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 import { IAuthRepository } from "../interfaces/auth.repository.interface.js";
 import { LoginAuthInput } from "../inputs/auth.input.js";
+import { AuthError } from "../../domain/errors/auth.error.js";
 
 export class LoginUseCase {
 
@@ -14,18 +15,15 @@ export class LoginUseCase {
 
         const user = await this.authRepository.findByEmail(input.email);
 
-        if (!user) {
-            throw new Error("Email ou mot de passe incorrect.");
-        }
+    if (!user) {
+        throw new AuthError("Email ou mot de passe incorrect.");
+    }
 
-        const passwordIsValid = await bcrypt.compare(
-            input.password,
-            user.password
-        );
+    const passwordIsValid = await bcrypt.compare(input.password, user.password);
 
-        if (!passwordIsValid) {
-            throw new Error("Email ou mot de passe incorrect.");
-        }
+    if (!passwordIsValid) {
+        throw new AuthError("Email ou mot de passe incorrect.");
+    }
 
         return user;
     }
